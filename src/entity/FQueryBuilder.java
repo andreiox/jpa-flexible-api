@@ -1,10 +1,10 @@
-package control;
+package entity;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import dto.FParameter;
+import control.FlexibleQueryController;
 
 @SuppressWarnings("rawtypes")
 public class FQueryBuilder {

@@ -2,6 +2,8 @@ package control;
 
 import java.util.List;
 
+import entity.FQueryBuilder;
+
 public class FlexibleQueryController {
 
 	private static final String SELECT_SINTAXE = "SELECT [[ATTRIBUTES]] from [[CLASS]] x WHERE [[WHERE_CLAUSE]]";

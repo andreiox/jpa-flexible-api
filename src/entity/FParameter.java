@@ -1,6 +1,5 @@
-package dto;
+package entity;
 
-import entity.FOperator;
 
 public class FParameter<T> {
 
