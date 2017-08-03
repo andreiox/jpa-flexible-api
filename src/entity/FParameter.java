@@ -1,6 +1,5 @@
 package entity;
 
-
 public class FParameter<T> {
 
 	private String atribute;

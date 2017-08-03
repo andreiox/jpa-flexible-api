@@ -11,7 +11,7 @@ public class FQueryBuilder {
 
 	private EntityManager entityManager;
 	private Class entityClass;
-	private List<String> attributes;
+	private String[] attributes;
 	private List<FParameter> parameters;
 	private int maxResults;
 
@@ -38,14 +38,6 @@ public class FQueryBuilder {
 		this.entityManager = entityManager;
 	}
 
-	public List<String> getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(List<String> attributes) {
-		this.attributes = attributes;
-	}
-
 	public List<FParameter> getParameters() {
 		return parameters;
 	}
@@ -68,5 +60,13 @@ public class FQueryBuilder {
 
 	public void setEntityClass(Class entityClass) {
 		this.entityClass = entityClass;
+	}
+
+	public String[] getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(String[] attributes) {
+		this.attributes = attributes;
 	}
 }
