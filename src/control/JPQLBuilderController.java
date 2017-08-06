@@ -47,7 +47,6 @@ public class JPQLBuilderController {
 		return sb.toString();
 	}
 
-	@SuppressWarnings("rawtypes")
 	private static String generateWhereClause(List<FParameter> parameters) {
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
