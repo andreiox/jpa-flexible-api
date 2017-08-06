@@ -67,7 +67,7 @@ public class FQueryBuilder {
 		return attributes;
 	}
 
-	public void setAttributes(String[] attributes) {
+	public void setAttributes(String... attributes) {
 		this.attributes = attributes;
 	}
 }

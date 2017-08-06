@@ -1,12 +1,12 @@
 package entity;
 
-public class FParameter<T> {
+public class FParameter {
 
 	private String atribute;
 	private FOperator operator;
-	private T value;
+	private Object value;
 
-	public FParameter(String atribute, FOperator operator, T value) {
+	public FParameter(String atribute, FOperator operator, Object value) {
 		this.atribute = atribute;
 		this.operator = operator;
 		this.setValue(value);
@@ -28,11 +28,11 @@ public class FParameter<T> {
 		this.operator = operator;
 	}
 
-	public T getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(T value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 
