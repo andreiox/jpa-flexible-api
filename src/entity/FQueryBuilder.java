@@ -15,11 +15,12 @@ public class FQueryBuilder {
 	private List<FParameter> parameters;
 	private int maxResults;
 
-	public <T> T getSingleResult() {
-		return null;
+	@SuppressWarnings("unchecked")
+	public <T> T getSingleResult() throws Exception {
+		return (T) FlexibleQueryController.doQuery(this).get(0);
 	}
 
-	public <T> List<T> getResultList() {
+	public <T> List<T> getResultList() throws Exception {
 		return FlexibleQueryController.doQuery(this);
 	}
 

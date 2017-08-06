@@ -4,12 +4,12 @@ public class FParameter<T> {
 
 	private String atribute;
 	private FOperator operator;
-	private T[] values;
+	private T value;
 
-	public FParameter(String atribute, FOperator operator, @SuppressWarnings("unchecked") T... values) {
+	public FParameter(String atribute, FOperator operator, T value) {
 		this.atribute = atribute;
 		this.operator = operator;
-		this.values = values;
+		this.setValue(value);
 	}
 
 	public String getAtribute() {
@@ -28,12 +28,12 @@ public class FParameter<T> {
 		this.operator = operator;
 	}
 
-	public T[] getValues() {
-		return values;
+	public T getValue() {
+		return value;
 	}
 
-	public void setValues(T[] values) {
-		this.values = values;
+	public void setValue(T value) {
+		this.value = value;
 	}
 
 }

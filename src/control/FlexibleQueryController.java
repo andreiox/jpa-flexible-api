@@ -1,70 +1,39 @@
 package control;
 
+import java.text.MessageFormat;
 import java.util.List;
+
+import javax.persistence.Query;
 
 import entity.FParameter;
 import entity.FQueryBuilder;
+import exception.JPQLBuilderException;
 
 public class FlexibleQueryController {
 
-	private static final String SELECT_SINTAXE = "SELECT [[ATTRIBUTES]] from [[CLASS]] x WHERE [[WHERE_CLAUSE]]";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> List<T> doQuery(FQueryBuilder fqb) throws Exception {
+		Query q = createQuery(fqb);
+		List list = q.getResultList();
 
-	public static <T> List<T> doQuery(FQueryBuilder fqb) {
-
-		String jpql = buildJpql(fqb);
-
-		return null;
+		return list;
 	}
 
-	private static String buildJpql(FQueryBuilder fqb) {
+	private static Query createQuery(FQueryBuilder fqb) throws JPQLBuilderException {
+		String jpql = JPQLBuilderController.buildJpql(fqb);
+		Query q = fqb.getEntityManager().createQuery(jpql);
+		setQueryParameters(q, fqb.getParameters());
 
-		StringBuilder sb = new StringBuilder(SELECT_SINTAXE);
-		String attributes = generateAttributeClause(fqb.getAttributes());
-		String classSimpleName = fqb.getEntityClass().getSimpleName();
-		String whereClause = generateWhereClause(fqb.getParameters());
-
-		return null;
+		return q;
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static String generateWhereClause(List<FParameter> parameters) {
+	private static void setQueryParameters(Query q, List<FParameter> parameters) {
 		int count = 0;
-		StringBuilder sb = new StringBuilder();
 		for (FParameter param : parameters) {
-			sb.append("x.");
-			sb.append(param.getAtribute());
-			sb.append(" ");
-			sb.append(param.getOperator().getJpqlOperator());
-			sb.append(" ");
-			sb.append(":param");
-			sb.append(count);
-
-			/**
-			 * FIXME Missing the logical connector
-			 * 
-			 */
-
-			count++;
+			if (param.getValue() != null)
+				q.setParameter(MessageFormat.format("param{0}", (count++)), param.getValue());
 		}
-
-		return sb.toString();
-	}
-
-	private static String generateAttributeClause(String[] attributes) {
-		int size = attributes.length;
-		if (size == 0)
-			return "x";
-
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < size; i++) {
-			sb.append("x.");
-			sb.append(attributes[i]);
-
-			if (i != size - 1)
-				sb.append(", ");
-		}
-
-		return sb.toString();
 	}
 
 }
