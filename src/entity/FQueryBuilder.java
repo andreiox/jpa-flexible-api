@@ -11,15 +11,16 @@ public class FQueryBuilder {
 
 	private EntityManager entityManager;
 	private Class entityClass;
-	private List<String> attributes;
+	private String[] attributes;
 	private List<FParameter> parameters;
 	private int maxResults;
 
-	public <T> T getSingleResult() {
-		return null;
+	@SuppressWarnings("unchecked")
+	public <T> T getSingleResult() throws Exception {
+		return (T) FlexibleQueryController.doQuery(this).get(0);
 	}
 
-	public <T> List<T> getResultList() {
+	public <T> List<T> getResultList() throws Exception {
 		return FlexibleQueryController.doQuery(this);
 	}
 
@@ -36,14 +37,6 @@ public class FQueryBuilder {
 
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
-	}
-
-	public List<String> getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(List<String> attributes) {
-		this.attributes = attributes;
 	}
 
 	public List<FParameter> getParameters() {
@@ -68,5 +61,13 @@ public class FQueryBuilder {
 
 	public void setEntityClass(Class entityClass) {
 		this.entityClass = entityClass;
+	}
+
+	public String[] getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(String[] attributes) {
+		this.attributes = attributes;
 	}
 }

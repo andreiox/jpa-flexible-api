@@ -1,25 +1,39 @@
 package control;
 
+import java.text.MessageFormat;
 import java.util.List;
 
+import javax.persistence.Query;
+
+import entity.FParameter;
 import entity.FQueryBuilder;
+import exception.JPQLBuilderException;
 
 public class FlexibleQueryController {
 
-	private static final String SELECT_SINTAXE = "SELECT [[ATTRIBUTES]] from [[CLASS]] x WHERE [[WHERE_CLAUSE]]";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> List<T> doQuery(FQueryBuilder fqb) throws Exception {
+		Query q = createQuery(fqb);
+		List list = q.getResultList();
 
-	public static <T> List<T> doQuery(FQueryBuilder fqb) {
-
-		String jpql = buildJpql(fqb);
-
-		return null;
+		return list;
 	}
 
-	private static String buildJpql(FQueryBuilder fqb) {
+	private static Query createQuery(FQueryBuilder fqb) throws JPQLBuilderException {
+		String jpql = JPQLBuilderController.buildJpql(fqb);
+		Query q = fqb.getEntityManager().createQuery(jpql);
+		setQueryParameters(q, fqb.getParameters());
 
-		StringBuilder sb = new StringBuilder(SELECT_SINTAXE);
+		return q;
+	}
 
-		return null;
+	@SuppressWarnings("rawtypes")
+	private static void setQueryParameters(Query q, List<FParameter> parameters) {
+		int count = 0;
+		for (FParameter param : parameters) {
+			if (param.getValue() != null)
+				q.setParameter(MessageFormat.format("param{0}", (count++)), param.getValue());
+		}
 	}
 
 }
