@@ -26,6 +26,9 @@ public class FlexibleQueryController {
 	}
 
 	private static Query createQuery(FQueryBuilder fqb) throws JPQLBuilderException {
+		if (fqb.getEntityManager() == null)
+			throw new JPQLBuilderException("You must provide an EntityManager");
+
 		String jpql = JPQLBuilderController.buildJpql(fqb);
 		Query q = fqb.getEntityManager().createQuery(jpql);
 		setQueryParameters(q, fqb.getParameters());

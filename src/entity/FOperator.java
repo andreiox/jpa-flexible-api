@@ -15,7 +15,9 @@ public enum FOperator {
 	CONTAIN("LIKE"),
 	DONT_CONTAIN("NOT LIKE"),
 	IN("IN"),
-	NOT_IN("NOT IN");
+	NOT_IN("NOT IN"),
+	IS_NULL("IS NULL"),
+	IS_NOT_NULL("IS NOT NULL");
 
 	private String jpqlOperator;
 
