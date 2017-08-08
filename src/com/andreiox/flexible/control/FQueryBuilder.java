@@ -1,10 +1,12 @@
-package entity;
+package com.andreiox.flexible.control;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import control.FlexibleQueryController;
+import com.andreiox.flexible.entity.FOrderBy;
+import com.andreiox.flexible.entity.FParameter;
 
 @SuppressWarnings("rawtypes")
 public class FQueryBuilder {
@@ -13,7 +15,19 @@ public class FQueryBuilder {
 	private Class entityClass;
 	private String[] attributes;
 	private List<FParameter> parameters;
+	private String[] groupBy;
+	private FOrderBy orderBy;
+	private int firstResult;
 	private int maxResults;
+
+	public FQueryBuilder() {
+		parameters = new ArrayList<FParameter>();
+	}
+
+	public FQueryBuilder(EntityManager entityManager) {
+		this();
+		this.entityManager = entityManager;
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T getSingleResult() throws Exception {
@@ -22,13 +36,6 @@ public class FQueryBuilder {
 
 	public <T> List<T> getResultList() throws Exception {
 		return FlexibleQueryController.doQuery(this);
-	}
-
-	public FQueryBuilder() {
-	}
-
-	public FQueryBuilder(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 
 	public EntityManager getEntityManager() {
@@ -41,10 +48,6 @@ public class FQueryBuilder {
 
 	public List<FParameter> getParameters() {
 		return parameters;
-	}
-
-	public void setParameters(List<FParameter> parameters) {
-		this.parameters = parameters;
 	}
 
 	public int getMaxResults() {
@@ -69,5 +72,29 @@ public class FQueryBuilder {
 
 	public void setAttributes(String... attributes) {
 		this.attributes = attributes;
+	}
+
+	public String[] getGroupBy() {
+		return groupBy;
+	}
+
+	public void setGroupBy(String... groupBy) {
+		this.groupBy = groupBy;
+	}
+
+	public FOrderBy getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(FOrderBy orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	public int getFirstResult() {
+		return firstResult;
+	}
+
+	public void setFirstResult(int firstResult) {
+		this.firstResult = firstResult;
 	}
 }

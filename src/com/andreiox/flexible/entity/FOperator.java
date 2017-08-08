@@ -1,4 +1,4 @@
-package entity;
+package com.andreiox.flexible.entity;
 
 public enum FOperator {
 
@@ -15,7 +15,10 @@ public enum FOperator {
 	CONTAIN("LIKE"),
 	DONT_CONTAIN("NOT LIKE"),
 	IN("IN"),
-	NOT_IN("NOT IN");
+	NOT_IN("NOT IN"),
+	IS_NULL("IS NULL"),
+	IS_NOT_NULL("IS NOT NULL"),
+	BETWEEN("BETWEEN");
 
 	private String jpqlOperator;
 

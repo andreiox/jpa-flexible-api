@@ -1,15 +1,13 @@
-package control;
+package com.andreiox.flexible.control;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.FQueryBuilder;
-
-public class ReflectionController {
+class ReflectionController {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List castListObjectArrayIntoEntityClass(FQueryBuilder fqb, List<Object[]> ListObjectArray)
+	static List castListObjectArrayIntoEntityClass(FQueryBuilder fqb, List<Object[]> ListObjectArray)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException,
 			SecurityException {
 

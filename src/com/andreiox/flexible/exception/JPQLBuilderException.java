@@ -1,4 +1,4 @@
-package exception;
+package com.andreiox.flexible.exception;
 
 public class JPQLBuilderException extends Exception {
 	private static final long serialVersionUID = 2790311613874413650L;
