@@ -1,18 +1,17 @@
 package control;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import entity.FOperator;
 import entity.FParameter;
-import entity.FQueryBuilder;
 import exception.JPQLBuilderException;
 
-public class FlexibleQueryController {
+class FlexibleQueryController {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> List<T> doQuery(FQueryBuilder fqb) throws Exception {
+	static <T> List<T> doQuery(FQueryBuilder fqb) throws Exception {
 		Query q = createQuery(fqb);
 		List result = null;
 		List aux = q.getResultList();
@@ -32,17 +31,36 @@ public class FlexibleQueryController {
 		String jpql = JPQLBuilderController.buildJpql(fqb);
 		Query q = fqb.getEntityManager().createQuery(jpql);
 		setQueryParameters(q, fqb.getParameters());
-		if (fqb.getMaxResults() != 0)
-			q.setMaxResults(fqb.getMaxResults());
+		q.setFirstResult(fqb.getFirstResult());
+		q.setMaxResults(fqb.getMaxResults());
 
 		return q;
 	}
 
 	private static void setQueryParameters(Query q, List<FParameter> parameters) {
-		int count = 0;
-		for (FParameter param : parameters) {
-			if (param.getValue() != null)
-				q.setParameter(MessageFormat.format("param{0}", (count++)), param.getValue());
+		for (int i = 0; i < parameters.size(); i++) {
+			FParameter param = parameters.get(i);
+			FOperator operator = param.getOperator();
+
+			if (operator == FOperator.IS_NULL || operator == FOperator.IS_NOT_NULL)
+				continue;
+
+			else if (operator == FOperator.ENDS_WITH || operator == FOperator.DOESNT_END_WITH)
+				q.setParameter(String.format("param{0}", i), String.format("{0}%", param.getValue()));
+
+			else if (operator == FOperator.STARTS_WITH || operator == FOperator.DOESNT_START_WITH)
+				q.setParameter(String.format("param{0}", i), String.format("%{0}", param.getValue()));
+
+			else if (operator == FOperator.CONTAIN || operator == FOperator.DONT_CONTAIN)
+				q.setParameter(String.format("param{0}", i), String.format("%{0}%", param.getValue()));
+
+			else if (operator == FOperator.BETWEEN) {
+				q.setParameter(String.format("param0{0}", i), param.getValue());
+				q.setParameter(String.format("param1{0}", i), param.getValue2());
+			}
+
+			else
+				q.setParameter(String.format("param{0}", i), param.getValue());
 		}
 	}
 

@@ -1,11 +1,12 @@
-package entity;
+package control;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import control.FlexibleQueryController;
+import entity.FOrderBy;
+import entity.FParameter;
 
 @SuppressWarnings("rawtypes")
 public class FQueryBuilder {

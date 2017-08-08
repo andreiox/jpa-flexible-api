@@ -2,14 +2,14 @@ package control;
 
 import java.util.List;
 
+import entity.FOperator;
 import entity.FOrderBy;
 import entity.FParameter;
-import entity.FQueryBuilder;
 import exception.JPQLBuilderException;
 
-public class JPQLBuilderController {
+class JPQLBuilderController {
 
-	public static String buildJpql(FQueryBuilder fqb) throws JPQLBuilderException {
+	static String buildJpql(FQueryBuilder fqb) throws JPQLBuilderException {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT ");
@@ -46,19 +46,35 @@ public class JPQLBuilderController {
 		if (size != 0) {
 			sb.append(" WHERE ");
 			for (int i = 0; i < size; i++) {
-				sb.append("x.");
-				sb.append(parameters.get(i).getAtribute());
-				sb.append(" ");
-				// FIXME
-				// TRATAMENTO ESPECIAL PARA OPERADORES ESPECIAIS
-				sb.append(parameters.get(i).getOperator().getJpqlOperator());
-				sb.append(" ");
-				sb.append(":param");
-				sb.append(i);
+				FParameter fParameter = parameters.get(i);
+				sb.append(generateClauseForOneParameter(i, fParameter));
 
 				if (i != size - 1)
 					sb.append(" AND ");
 			}
+		}
+
+		return new String(sb);
+	}
+
+	private static String generateClauseForOneParameter(int i, FParameter fParameter) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("x.");
+		sb.append(fParameter.getAtribute());
+		sb.append(" ");
+		sb.append(fParameter.getOperator().getJpqlOperator());
+
+		if (fParameter.getOperator() == FOperator.BETWEEN) {
+			sb.append(" ");
+			sb.append(":param0");
+			sb.append(i);
+			sb.append(" AND ");
+			sb.append(":param1");
+			sb.append(i);
+		} else if (fParameter.getOperator() != FOperator.ENDS_WITH && fParameter.getOperator() != FOperator.DOESNT_END_WITH) {
+			sb.append(" ");
+			sb.append(":param");
+			sb.append(i);
 		}
 
 		return new String(sb);

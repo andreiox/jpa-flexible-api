@@ -17,7 +17,8 @@ public enum FOperator {
 	IN("IN"),
 	NOT_IN("NOT IN"),
 	IS_NULL("IS NULL"),
-	IS_NOT_NULL("IS NOT NULL");
+	IS_NOT_NULL("IS NOT NULL"),
+	BETWEEN("BETWEEN");
 
 	private String jpqlOperator;
 
