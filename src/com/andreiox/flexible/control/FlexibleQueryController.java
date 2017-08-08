@@ -1,12 +1,12 @@
-package control;
+package com.andreiox.flexible.control;
 
 import java.util.List;
 
 import javax.persistence.Query;
 
-import entity.FOperator;
-import entity.FParameter;
-import exception.JPQLBuilderException;
+import com.andreiox.flexible.entity.FOperator;
+import com.andreiox.flexible.entity.FParameter;
+import com.andreiox.flexible.exception.JPQLBuilderException;
 
 class FlexibleQueryController {
 

@@ -1,4 +1,4 @@
-package control;
+package com.andreiox.flexible.control;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

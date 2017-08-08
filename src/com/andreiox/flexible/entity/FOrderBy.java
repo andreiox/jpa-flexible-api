@@ -1,4 +1,4 @@
-package entity;
+package com.andreiox.flexible.entity;
 
 public class FOrderBy {
 

@@ -1,12 +1,12 @@
-package control;
+package com.andreiox.flexible.control;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import entity.FOrderBy;
-import entity.FParameter;
+import com.andreiox.flexible.entity.FOrderBy;
+import com.andreiox.flexible.entity.FParameter;
 
 @SuppressWarnings("rawtypes")
 public class FQueryBuilder {
