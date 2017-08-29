@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import com.andreiox.flexible.entity.FOperator;
 import com.andreiox.flexible.entity.FOrderBy;
 import com.andreiox.flexible.entity.FParameter;
+import com.andreiox.flexible.entity.FSortOrder;
 
 public class FQueryBuilder {
 
@@ -89,6 +90,10 @@ public class FQueryBuilder {
 
 	public FOrderBy getOrderBy() {
 		return orderBy;
+	}
+
+	public void setOrderBy(FSortOrder sortOrder, String... attributes) {
+		orderBy = new FOrderBy(sortOrder, attributes);
 	}
 
 	public void setOrderBy(FOrderBy orderBy) {
