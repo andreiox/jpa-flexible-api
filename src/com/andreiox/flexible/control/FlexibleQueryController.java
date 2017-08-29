@@ -4,35 +4,43 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import com.andreiox.flexible.entity.FOperator;
 import com.andreiox.flexible.entity.FParameter;
 import com.andreiox.flexible.exception.JPQLBuilderException;
+import com.andreiox.flexible.model.IOperator;
 
 class FlexibleQueryController {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	static <T> List<T> doQuery(FQueryBuilder fqb) throws Exception {
-		Query q = createQuery(fqb);
+	static <T> List<T> doQuery(FQueryBuilder builder) throws Exception {
+		checkIfEssentialInformationIsProvided(builder);
+
+		Query q = createQuery(builder);
 		List result = null;
 		List aux = q.getResultList();
 
-		if (fqb.getAttributes().length < 2)
-			result = aux;
+		if (builder.getAttributes().length > 1)
+			result = ReflectionController.castListObjectArrayIntoEntityClass(builder, (List<Object[]>) aux);
 		else
-			result = ReflectionController.castListObjectArrayIntoEntityClass(fqb, (List<Object[]>) aux);
+			result = aux;
 
 		return result;
 	}
 
-	private static Query createQuery(FQueryBuilder fqb) throws JPQLBuilderException {
-		if (fqb.getEntityManager() == null)
+	private static void checkIfEssentialInformationIsProvided(FQueryBuilder builder) throws JPQLBuilderException {
+		if (builder.getEntityManager() == null)
 			throw new JPQLBuilderException("You must provide an EntityManager");
 
-		String jpql = JPQLBuilderController.buildJpql(fqb);
-		Query q = fqb.getEntityManager().createQuery(jpql);
-		setQueryParameters(q, fqb.getParameters());
-		q.setFirstResult(fqb.getFirstResult());
-		q.setMaxResults(fqb.getMaxResults());
+		else if (builder.getEntityClass() == null)
+			throw new JPQLBuilderException("You must provide the Entity Class");
+	}
+
+	private static Query createQuery(FQueryBuilder builder) throws JPQLBuilderException {
+
+		String jpql = JPQLBuilderController.buildJpql(builder);
+		Query q = builder.getEntityManager().createQuery(jpql);
+		setQueryParameters(q, builder.getParameters());
+		q.setFirstResult(builder.getFirstResult());
+		q.setMaxResults(builder.getMaxResults());
 
 		return q;
 	}
@@ -40,27 +48,8 @@ class FlexibleQueryController {
 	private static void setQueryParameters(Query q, List<FParameter> parameters) {
 		for (int i = 0; i < parameters.size(); i++) {
 			FParameter param = parameters.get(i);
-			FOperator operator = param.getOperator();
-
-			if (operator == FOperator.IS_NULL || operator == FOperator.IS_NOT_NULL)
-				continue;
-
-			else if (operator == FOperator.ENDS_WITH || operator == FOperator.DOESNT_END_WITH)
-				q.setParameter(String.format("param{0}", i), String.format("{0}%", param.getValue()));
-
-			else if (operator == FOperator.STARTS_WITH || operator == FOperator.DOESNT_START_WITH)
-				q.setParameter(String.format("param{0}", i), String.format("%{0}", param.getValue()));
-
-			else if (operator == FOperator.CONTAIN || operator == FOperator.DONT_CONTAIN)
-				q.setParameter(String.format("param{0}", i), String.format("%{0}%", param.getValue()));
-
-			else if (operator == FOperator.BETWEEN) {
-				q.setParameter(String.format("param0{0}", i), param.getValue());
-				q.setParameter(String.format("param1{0}", i), param.getValue2());
-			}
-
-			else
-				q.setParameter(String.format("param{0}", i), param.getValue());
+			IOperator operator = param.getOperator();
+			operator.setQueryParameter(q, i, param.getValue(), param.getValue2());
 		}
 	}
 
