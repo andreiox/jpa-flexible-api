@@ -12,21 +12,29 @@ class FlexibleQueryController {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	static <T> List<T> doQuery(FQueryBuilder builder) throws Exception {
+		checkIfEssentialInformationIsProvided(builder);
+
 		Query q = createQuery(builder);
 		List result = null;
 		List aux = q.getResultList();
 
-		if (builder.getAttributes().length < 2)
-			result = aux;
-		else
+		if (builder.getAttributes().length > 1)
 			result = ReflectionController.castListObjectArrayIntoEntityClass(builder, (List<Object[]>) aux);
+		else
+			result = aux;
 
 		return result;
 	}
 
-	private static Query createQuery(FQueryBuilder builder) throws JPQLBuilderException {
+	private static void checkIfEssentialInformationIsProvided(FQueryBuilder builder) throws JPQLBuilderException {
 		if (builder.getEntityManager() == null)
 			throw new JPQLBuilderException("You must provide an EntityManager");
+
+		else if (builder.getEntityClass() == null)
+			throw new JPQLBuilderException("You must provide the Entity Class");
+	}
+
+	private static Query createQuery(FQueryBuilder builder) throws JPQLBuilderException {
 
 		String jpql = JPQLBuilderController.buildJpql(builder);
 		Query q = builder.getEntityManager().createQuery(jpql);

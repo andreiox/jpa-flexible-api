@@ -4,11 +4,10 @@ import java.util.List;
 
 import com.andreiox.flexible.entity.FOrderBy;
 import com.andreiox.flexible.entity.FParameter;
-import com.andreiox.flexible.exception.JPQLBuilderException;
 
 class JPQLBuilderController {
 
-	static String buildJpql(FQueryBuilder builder) throws JPQLBuilderException {
+	static String buildJpql(FQueryBuilder builder) {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT ");
@@ -23,10 +22,7 @@ class JPQLBuilderController {
 		return new String(sb);
 	}
 
-	private static String getEntityClassSimpleName(Class<?> entityClass) throws JPQLBuilderException {
-		if (entityClass == null)
-			throw new JPQLBuilderException("Entity Class cannot be null.");
-
+	private static String getEntityClassSimpleName(Class<?> entityClass) {
 		return entityClass.getSimpleName();
 	}
 
