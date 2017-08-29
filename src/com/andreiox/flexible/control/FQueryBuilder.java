@@ -5,14 +5,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import com.andreiox.flexible.entity.FOperator;
 import com.andreiox.flexible.entity.FOrderBy;
 import com.andreiox.flexible.entity.FParameter;
 
-@SuppressWarnings("rawtypes")
 public class FQueryBuilder {
 
 	private EntityManager entityManager;
-	private Class entityClass;
+	private Class<?> entityClass;
 	private String[] attributes;
 	private List<FParameter> parameters;
 	private String[] groupBy;
@@ -29,6 +29,11 @@ public class FQueryBuilder {
 		this.entityManager = entityManager;
 	}
 
+	public FQueryBuilder(EntityManager entityManager, Class<?> entityClass) {
+		this(entityManager);
+		this.entityClass = entityClass;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> T getSingleResult() throws Exception {
 		return (T) FlexibleQueryController.doQuery(this).get(0);
@@ -36,6 +41,26 @@ public class FQueryBuilder {
 
 	public <T> List<T> getResultList() throws Exception {
 		return FlexibleQueryController.doQuery(this);
+	}
+
+	public void addParameter(String atribute, FOperator operator) {
+		parameters.add(new FParameter(atribute, operator));
+	}
+
+	public void addParameter(String atribute, FOperator operator, Object value) {
+		parameters.add(new FParameter(atribute, operator, value));
+	}
+
+	public void addParameter(String atribute, FOperator operator, Object value1, Object value2) {
+		parameters.add(new FParameter(atribute, operator, value1, value2));
+	}
+
+	public void setAttributes(String... attributes) {
+		this.attributes = attributes;
+	}
+
+	public void setGroupBy(String... groupBy) {
+		this.groupBy = groupBy;
 	}
 
 	public EntityManager getEntityManager() {
@@ -46,40 +71,20 @@ public class FQueryBuilder {
 		this.entityManager = entityManager;
 	}
 
+	public Class<?> getEntityClass() {
+		return entityClass;
+	}
+
+	public void setEntityClass(Class<?> entityClass) {
+		this.entityClass = entityClass;
+	}
+
 	public List<FParameter> getParameters() {
 		return parameters;
 	}
 
-	public int getMaxResults() {
-		return maxResults;
-	}
-
-	public void setMaxResults(int maxResults) {
-		this.maxResults = maxResults;
-	}
-
-	public Class getEntityClass() {
-		return entityClass;
-	}
-
-	public void setEntityClass(Class entityClass) {
-		this.entityClass = entityClass;
-	}
-
-	public String[] getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(String... attributes) {
-		this.attributes = attributes;
-	}
-
-	public String[] getGroupBy() {
-		return groupBy;
-	}
-
-	public void setGroupBy(String... groupBy) {
-		this.groupBy = groupBy;
+	public void setParameters(List<FParameter> parameters) {
+		this.parameters = parameters;
 	}
 
 	public FOrderBy getOrderBy() {
@@ -96,5 +101,21 @@ public class FQueryBuilder {
 
 	public void setFirstResult(int firstResult) {
 		this.firstResult = firstResult;
+	}
+
+	public int getMaxResults() {
+		return maxResults;
+	}
+
+	public void setMaxResults(int maxResults) {
+		this.maxResults = maxResults;
+	}
+
+	public String[] getAttributes() {
+		return attributes;
+	}
+
+	public String[] getGroupBy() {
+		return groupBy;
 	}
 }

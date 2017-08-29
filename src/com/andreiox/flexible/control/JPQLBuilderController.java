@@ -2,30 +2,28 @@ package com.andreiox.flexible.control;
 
 import java.util.List;
 
-import com.andreiox.flexible.entity.FOperator;
 import com.andreiox.flexible.entity.FOrderBy;
 import com.andreiox.flexible.entity.FParameter;
 import com.andreiox.flexible.exception.JPQLBuilderException;
 
 class JPQLBuilderController {
 
-	static String buildJpql(FQueryBuilder fqb) throws JPQLBuilderException {
+	static String buildJpql(FQueryBuilder builder) throws JPQLBuilderException {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT ");
-		sb.append(generateAttributeClause(fqb.getAttributes()));
+		sb.append(generateAttributeClause(builder.getAttributes()));
 		sb.append(" FROM ");
-		sb.append(getEntityClassSimpleName(fqb.getEntityClass()));
+		sb.append(getEntityClassSimpleName(builder.getEntityClass()));
 		sb.append(" x");
-		sb.append(generateWhereClause(fqb.getParameters()));
-		sb.append(generateGroupBy(fqb.getGroupBy()));
-		sb.append(generateOrderBy(fqb.getOrderBy()));
+		sb.append(generateWhereClause(builder.getParameters()));
+		sb.append(generateGroupBy(builder.getGroupBy()));
+		sb.append(generateOrderBy(builder.getOrderBy()));
 
 		return new String(sb);
 	}
 
-	@SuppressWarnings("rawtypes")
-	private static String getEntityClassSimpleName(Class entityClass) throws JPQLBuilderException {
+	private static String getEntityClassSimpleName(Class<?> entityClass) throws JPQLBuilderException {
 		if (entityClass == null)
 			throw new JPQLBuilderException("Entity Class cannot be null.");
 
@@ -58,26 +56,7 @@ class JPQLBuilderController {
 	}
 
 	private static String generateClauseForOneParameter(int i, FParameter fParameter) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("x.");
-		sb.append(fParameter.getAtribute());
-		sb.append(" ");
-		sb.append(fParameter.getOperator().getJpqlOperator());
-
-		if (fParameter.getOperator() == FOperator.BETWEEN) {
-			sb.append(" ");
-			sb.append(":param0");
-			sb.append(i);
-			sb.append(" AND ");
-			sb.append(":param1");
-			sb.append(i);
-		} else if (fParameter.getOperator() != FOperator.ENDS_WITH && fParameter.getOperator() != FOperator.DOESNT_END_WITH) {
-			sb.append(" ");
-			sb.append(":param");
-			sb.append(i);
-		}
-
-		return new String(sb);
+		return fParameter.getOperator().getJpqlSyntax(fParameter.getAtribute(), i);
 	}
 
 	private static String generateGroupBy(String[] groupByAttributes) {

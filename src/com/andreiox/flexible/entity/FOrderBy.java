@@ -5,6 +5,10 @@ public class FOrderBy {
 	private String[] attributes;
 	private FSortOrder sortOrder;
 
+	public FOrderBy() {
+		sortOrder = FSortOrder.ASC;
+	}
+
 	public String[] getAttributes() {
 		return attributes;
 	}
